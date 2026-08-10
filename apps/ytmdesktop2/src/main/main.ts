@@ -11,7 +11,7 @@ import { WindowManager } from "@main/windows/windowManager";
 import { onWindowLoad } from "@main/windows/windowUtils";
 import { logger } from "@shared/utils/console";
 import { waitMs } from "@shared/utils/promises";
-import { app, BrowserWindow, protocol } from "electron";
+import { app, BrowserWindow, protocol, session } from "electron";
 
 // Side-effect: register track router lifecycle handlers
 import "@main/trpc/routers/track";
@@ -107,6 +107,9 @@ const runApp = async function () {
 	app.on("activate", reactivate); // runs when the app is activated (e.g. when the app is brought back from the background)
 	app.on("ready", async () => {
 		thumbnailCache.registerProtocol();
+		// Ghostery registers a session preload script. It must happen before the
+		// YouTube WebContentsView exists, otherwise the current document misses it.
+		await serviceCollection.getTypedProvider("adblock").prepare(session.defaultSession);
 		await waitMs(); // next tick
 		mainWindow = await windowManager.createRootWindow();
 		attachTrpcWindow(mainWindow.main);

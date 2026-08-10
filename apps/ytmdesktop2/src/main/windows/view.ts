@@ -1,5 +1,5 @@
 import { lockAppChromeZoom } from "@main/domain/uiZoom";
-import { defaultUrl, isDevelopment, isProduction } from "@main/infra/devUtils";
+import { defaultUrl, isProduction, shouldOpenDevTools } from "@main/infra/devUtils";
 import { getGoogleLoginUserAgent } from "@main/infra/userAgent";
 import { createLogger } from "@shared/utils/console";
 import translations from "@translations/index";
@@ -123,7 +123,7 @@ export const googleLoginPopup = async (authUrl: string, parent?: Electron.Browse
 		}
 		return { action: "allow" };
 	});
-	if (isDevelopment) {
+	if (shouldOpenDevTools) {
 		loginView.webContents.openDevTools({ mode: "detach" });
 		noticeView.webContents.openDevTools({ mode: "detach" });
 	}

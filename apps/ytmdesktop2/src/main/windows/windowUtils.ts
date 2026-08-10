@@ -1,6 +1,6 @@
 import { platform } from "@electron-toolkit/utils";
 import { lockAppChromeZoom } from "@main/domain/uiZoom";
-import { isDevelopment, isProdDebug } from "@main/infra/devUtils";
+import { shouldOpenDevTools } from "@main/infra/devUtils";
 import { createYmlStore } from "@main/lib/store/createYmlStore";
 import { attachTrpcWindow } from "@main/trpc/handler";
 import { createLogger } from "@shared/utils/console";
@@ -262,7 +262,7 @@ export async function createAppWindow(appOptions?: Partial<WindowOptions>) {
 		appOptions ?? {};
 	if (!path) path = "/";
 	const shouldShow = show ?? true;
-	const shouldOpenDevtools = devtools ?? (isDevelopment || isProdDebug);
+	const shouldOpenDevtools = devtools ?? shouldOpenDevTools;
 	// Create hidden so we can position relative to parent before first paint (avoids primary-display flash).
 	const win = new BrowserWindow({
 		width: width ?? 800,

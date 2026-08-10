@@ -23,6 +23,13 @@ function PlayerGeneralSettingsPage() {
 				<CardContent>
 					<FieldGroup>
 						<SettingsCheckbox
+							configKey="player.adblock"
+							defaultValue={true}
+							description="Blocks ads and tracking requests in the YouTube Music view."
+						>
+							Block ads and trackers
+						</SettingsCheckbox>
+						<SettingsCheckbox
 							configKey="player.skipDisliked"
 							description={
 								<span className="inline-flex items-center gap-2">

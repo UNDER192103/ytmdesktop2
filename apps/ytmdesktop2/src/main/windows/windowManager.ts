@@ -1,12 +1,12 @@
 import { applyYoutubeZoom, bindYoutubeWebContents, TOOLBAR_HEIGHT } from "@main/domain/uiZoom";
+import { defaultUrl, isDevelopment, isProdDebug, isProduction, shouldOpenDevTools } from "@main/infra/devUtils";
 import { getLifecycleContext } from "@main/lifecycle";
 import { chromecastArgvFor, CHROMECAST_SETTING_KEY } from "@shared/chromecast/flag";
-import { defaultUrl, isDevelopment, isProdDebug, isProduction } from "@main/infra/devUtils";
 import { toChromeUserAgent } from "@main/infra/userAgent";
 import { serverMain } from "@main/ipc/serverEvents";
 import { logger } from "@shared/utils/console";
 import translations from "@translations/index";
-import { app, BrowserWindow, BrowserWindowConstructorOptions, WebContentsView } from "electron";
+import { app, BrowserWindow, BrowserWindowConstructorOptions, session, WebContentsView } from "electron";
 import { debounce } from "lodash-es";
 import { join } from "path";
 import appIconPath from "~/build/favicon.ico?asset";
@@ -134,7 +134,7 @@ export class WindowManager {
 			if (!this.mainWindow) return;
 
 			this.mainWindow.contentView.addChildView(view);
-			if (isDevelopment || isProdDebug) view.webContents.openDevTools({ mode: "detach" });
+			if (shouldOpenDevTools) view.webContents.openDevTools({ mode: "detach" });
 
 			const [width, height] = this.mainWindow.getSize();
 			view.setBounds({
@@ -167,6 +167,7 @@ export class WindowManager {
 				this.setupYoutubeViewEvents(view);
 			},
 			{
+				session: session.defaultSession,
 				sandbox: false,
 				contextIsolation: true,
 				nodeIntegration: false,
@@ -191,7 +192,7 @@ export class WindowManager {
 					x: 0,
 					y: 0,
 				});
-				if (isDevelopment) view.webContents.openDevTools({ mode: "detach" });
+				if (shouldOpenDevTools) view.webContents.openDevTools({ mode: "detach" });
 			},
 			{ lockSize: { resize: "width" }, transparent: true },
 		);
@@ -341,7 +342,7 @@ export class WindowManager {
 		logger.debug("windowState", this.mainWindow.getBounds());
 
 		await this.views.youtubeView.webContents.loadURL(defaultUrl).then(() => {
-			if (isDevelopment || isProdDebug) {
+			if (shouldOpenDevTools) {
 				this.views!.youtubeView.webContents.openDevTools({ mode: "detach" });
 			}
 

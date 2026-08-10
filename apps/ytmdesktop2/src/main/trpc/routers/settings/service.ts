@@ -63,6 +63,7 @@ const defaultSettings = {
 		preferWordSync: true,
 	},
 	player: {
+		adblock: true,
 		skipDisliked: false,
 		/** `ask` = confirm dialog; `play` = open watch immediately */
 		deepLinkOpen: "ask" as "ask" | "play",
