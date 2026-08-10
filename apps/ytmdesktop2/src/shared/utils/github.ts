@@ -1,6 +1,6 @@
 import { createFetch } from "@better-fetch/fetch";
 
-const REPO_WITH_AUTHOR = import.meta.env.VITE_GITHUB_REPOSITORY;
+const REPO_WITH_AUTHOR = import.meta.env.VITE_GITHUB_REPOSITORY || "Venipa/ytmdesktop2";
 const [GITHUB_AUTHOR, GITHUB_REPOSITORY] = REPO_WITH_AUTHOR.split("/", 2);
 
 export const apiBaseUrl = "https://api.github.com/repos/" + GITHUB_REPOSITORY;
